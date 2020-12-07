@@ -19,22 +19,17 @@ namespace StarSystem
         public char Char { get; }
         public ConsoleColor Color { get; } = ConsoleColor.White;
 
-
-        public static bool IsStarAt(int x, int y)
-        {
-            var rnd = new NR3Generator(x * y);
-
-            return rnd.Next(1, 200) == 1; 
-        }
-
         public Star(int x, int y)
         {
-            _rnd = new NR3Generator(x * y);
+            _rnd = new NR3Generator((x & 0xFFFF) << 16 | (y & 0xFFFF));
 
             CoordX = x;
             CoordY = y;
 
-            IsStar = _rnd.Next(1, 200) == 1;
+            IsStar = _rnd.Next(1, 150) == 1;
+
+            if (!IsStar) return;
+
             Char = startypes[_rnd.Next(0, 4)];
             var colorChance = _rnd.Next(0, 50);
             if(colorChance < colors.Length)

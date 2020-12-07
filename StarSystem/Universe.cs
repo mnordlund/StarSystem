@@ -65,9 +65,9 @@ namespace StarSystem
             {
                 for (var x = 0; x < ScreenWidth; x++)
                 {
-                    if(Star.IsStarAt(x + Xpos, y + Ypos))
+                    var star = new Star(x + Xpos, y + Ypos);
+                    if(star.IsStar)
                     {
-                        var star = new Star(x + Xpos, y + Ypos);
                         screenbuffer[x + y * ScreenWidth] = star.Char;
                         _stars.Add(star);
                     }
