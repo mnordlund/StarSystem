@@ -8,25 +8,60 @@ namespace StarSystem
 {
     class Star
     {
-        private static readonly char[] startypes = { '*', 'O', 'o', '¤' };
-        public static bool IsStar(int x, int y)
-        {
-            var rnd = new TRandom(x * y);
 
-            return rnd.Next(1, 20) == 1; 
+        private static readonly char[] startypes = { '*', 'O', 'o', '¤' };
+        private static readonly ConsoleColor[] colors = { ConsoleColor.Gray, ConsoleColor.DarkGray, ConsoleColor.Green, ConsoleColor.Cyan, ConsoleColor.Magenta, ConsoleColor.Red };
+        private NR3Generator _rnd;
+
+        public int CoordX { get; }
+        public int CoordY { get; }
+        public bool IsStar { get; }
+        public char Char { get; }
+        public ConsoleColor Color { get; } = ConsoleColor.White;
+
+
+        public static bool IsStarAt(int x, int y)
+        {
+            var rnd = new NR3Generator(x * y);
+
+            return rnd.Next(1, 200) == 1; 
         }
 
-        public static char GetStarChar(int x, int y)
+        public Star(int x, int y)
         {
-            var rnd = new NR3Generator(x*y);
-            if (rnd.Next(1, 100) == 1)
+            _rnd = new NR3Generator(x * y);
+
+            CoordX = x;
+            CoordY = y;
+
+            IsStar = _rnd.Next(1, 200) == 1;
+            Char = startypes[_rnd.Next(0, 4)];
+            var colorChance = _rnd.Next(0, 50);
+            if(colorChance < colors.Length)
             {
-                return startypes[rnd.Next(0, 4)];
+                Color = colors[colorChance];
             }
-            else
+        }
+
+        public override string ToString()
+        {
+            return $"{CoordX} x {CoordY}";
+        }
+
+        public override bool Equals(object obj)
+        {
+            if(obj is Star)
             {
-                return ' ';
+                var cmp = (Star)obj;
+                return cmp.CoordX == CoordX && cmp.CoordY == CoordY;
             }
+
+            return false;
+        }
+
+        public int Distance(Star star)
+        {
+            return Math.Abs(CoordX - star.CoordX) + Math.Abs(CoordY - star.CoordY);
         }
     }
 }

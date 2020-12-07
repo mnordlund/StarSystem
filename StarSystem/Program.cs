@@ -7,26 +7,26 @@ namespace StarSystem
     {
         static void Main(string[] args)
         {
-            Console.WindowWidth = 160;
-            Console.WindowHeight = 40;
+            const int WIDTH = 160;
+            const int HEIGHT = 40;
 
-            var universe = new Universe(160, 40);
-            var frameTimes = new long[5];
-            var frameCount = 0;
-            var sw = new Stopwatch();
+            // Setup console
+            Console.WindowWidth = WIDTH;
+            Console.WindowHeight = HEIGHT;
+            Console.CursorVisible = false;
+
+            var universe = new Universe(WIDTH, HEIGHT);
+            var controller = new Controller(universe);
+
+            // Game loop
             while (universe.Alive)
             {
-                sw.Restart();
-                universe.RenderFrame();
-                sw.Stop();
-                frameTimes[frameCount % 5] = sw.ElapsedMilliseconds;
-                frameCount++;
                 universe.Update();
+                universe.RenderFrame();
+                controller.Update();
+
             }
-
-            Console.WriteLine($"Frametimes: {frameTimes[0]}, {frameTimes[1]}, {frameTimes[2]}, {frameTimes[3]}, {frameTimes[4]}");
-            
-
+            Console.Clear();
         }
     }
 }

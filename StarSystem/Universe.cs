@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Diagnostics;
 
 namespace StarSystem
 {
@@ -9,12 +9,15 @@ namespace StarSystem
         public int ScreenWidth { get; }
         public int ScreenHeight { get; }
 
-        private int _xpos = 0;
-        private int _ypos = 0;
+        public int Xpos { get; set; } = 0;
+        public int Ypos { get; set; } = 0;
 
-        public bool Alive { get; private set; }
+        public bool Alive { get; set; }
 
         private char[] screenbuffer;
+        private Stopwatch _sw = new Stopwatch();
+
+        private List<Star> _stars;
 
         public Universe(int width, int height)
         {
@@ -22,52 +25,64 @@ namespace StarSystem
             ScreenHeight = height;
             Alive = true;
             screenbuffer = new char[ScreenWidth * ScreenHeight];
+            _stars = new List<Star>();
         }
 
         public void RenderFrame()
         {
+            _sw.Start();
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.BackgroundColor = ConsoleColor.Black;
+
+            // Render screenbuffer.
+            Console.Write(screenbuffer);
+
+            // Render colored stars
+            foreach(var star in _stars)
+            {
+                if(star.Color != ConsoleColor.White)
+                {
+                    Console.SetCursorPosition(star.CoordX - Xpos, star.CoordY - Ypos);
+                    Console.ForegroundColor = star.Color;
+
+
+                    Console.Write(star.Char);
+
+                    Console.BackgroundColor = ConsoleColor.Black;
+                }
+            }
+
+            _sw.Stop();
+        }
+
+        public void Update()
+        {
+            var renderTime = _sw.ElapsedMilliseconds;
+            _sw.Restart();
+            _stars.Clear();
             Console.SetCursorPosition(0, 0);
             for (var y = 0; y < ScreenHeight; y++)
             {
                 for (var x = 0; x < ScreenWidth; x++)
                 {
-                    screenbuffer[x + y * ScreenWidth] = Star.GetStarChar(x + _xpos, y + _ypos);
+                    if(Star.IsStarAt(x + Xpos, y + Ypos))
+                    {
+                        var star = new Star(x + Xpos, y + Ypos);
+                        screenbuffer[x + y * ScreenWidth] = star.Char;
+                        _stars.Add(star);
+                    }
+                    else
+                    {
+                        screenbuffer[x + y * ScreenWidth] = ' ';
+                    }
+                    
                 }
             }
 
-            var statusString = $"{_xpos}x{_ypos}";
+            var statusString = $"{Xpos} x {Ypos} ({renderTime}ms)";
 
             statusString.CopyTo(0, screenbuffer, 0, statusString.Length);
-
-            Console.Write(screenbuffer);
-        }
-
-        public void Update()
-        {
-            var key = Console.ReadKey();
-
-            switch(key.Key)
-            {
-                case ConsoleKey.Escape:
-                    Alive = false;
-                    break;
-                case ConsoleKey.UpArrow:
-                    _ypos--;
-                    break;
-                case ConsoleKey.DownArrow:
-                    _ypos++;
-                    break;
-                case ConsoleKey.LeftArrow:
-                    _xpos--;
-                    break;
-                case ConsoleKey.RightArrow:
-                    _xpos++;
-                    break;
-            }
-            if(key.Key == ConsoleKey.Escape)
-            { Alive = false; }
-
-
+            _sw.Stop();
         }
     }
 }
