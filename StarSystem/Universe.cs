@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 
 namespace StarSystem
 {
@@ -14,7 +15,10 @@ namespace StarSystem
 
         public bool Alive { get; set; }
 
-        private char[] screenbuffer;
+        private char[] _clearscreen;
+
+        private string locationString;
+
         private Stopwatch _sw = new Stopwatch();
 
         private List<Star> _stars;
@@ -24,7 +28,7 @@ namespace StarSystem
             ScreenWidth = width;
             ScreenHeight = height;
             Alive = true;
-            screenbuffer = new char[ScreenWidth * ScreenHeight];
+            _clearscreen = Enumerable.Repeat(' ', ScreenWidth * ScreenHeight).ToArray();
             _stars = new List<Star>();
         }
 
@@ -34,24 +38,22 @@ namespace StarSystem
             Console.ForegroundColor = ConsoleColor.White;
             Console.BackgroundColor = ConsoleColor.Black;
 
-            // Render screenbuffer.
-            Console.Write(screenbuffer);
-
-            // Render colored stars
-            foreach(var star in _stars)
+            // Clear Screen, this is faster than Console.Clear
+            Console.SetCursorPosition(0, 0);
+            Console.Write(_clearscreen);
+            // Render stars stars
+            foreach (var star in _stars)
             {
-                if(star.Color != ConsoleColor.White)
-                {
-                    Console.SetCursorPosition(star.CoordX - Xpos, star.CoordY - Ypos);
-                    Console.ForegroundColor = star.Color;
+                Console.SetCursorPosition(star.CoordX - Xpos, star.CoordY - Ypos);
+                Console.ForegroundColor = star.Color;
 
 
-                    Console.Write(star.Char);
+                Console.Write(star.Char);
 
-                    Console.BackgroundColor = ConsoleColor.Black;
-                }
             }
 
+            Console.SetCursorPosition(0, 0);
+            Console.Write(locationString);
             _sw.Stop();
         }
 
@@ -68,20 +70,13 @@ namespace StarSystem
                     var star = new Star((Int16)(x + Xpos), (Int16)(y + Ypos));
                     if(star.IsStar)
                     {
-                        screenbuffer[x + y * ScreenWidth] = star.Char;
                         _stars.Add(star);
-                    }
-                    else
-                    {
-                        screenbuffer[x + y * ScreenWidth] = ' ';
                     }
                     
                 }
             }
 
-            var statusString = $"{Xpos} x {Ypos} ({renderTime}ms)";
-
-            statusString.CopyTo(0, screenbuffer, 0, statusString.Length);
+            locationString = $"{Xpos} x {Ypos} ({renderTime}ms)";
             _sw.Stop();
         }
 
@@ -90,7 +85,7 @@ namespace StarSystem
             ScreenWidth = width;
             ScreenHeight = height;
 
-            screenbuffer = new char[ScreenWidth * ScreenHeight];
+            _clearscreen = Enumerable.Repeat(' ', ScreenWidth * ScreenHeight).ToArray();
         }
 
 
