@@ -6,11 +6,11 @@ namespace StarSystem
 {
     class Universe
     {
-        public int ScreenWidth { get; }
-        public int ScreenHeight { get; }
+        public int ScreenWidth { get; private set; }
+        public int ScreenHeight { get; private set; }
 
-        public int Xpos { get; set; } = 0;
-        public int Ypos { get; set; } = 0;
+        public Int16 Xpos { get; set; } = 0;
+        public Int16 Ypos { get; set; } = 0;
 
         public bool Alive { get; set; }
 
@@ -61,11 +61,11 @@ namespace StarSystem
             _sw.Restart();
             _stars.Clear();
             Console.SetCursorPosition(0, 0);
-            for (var y = 0; y < ScreenHeight; y++)
+            for (Int16 y = 0; y < ScreenHeight; y++)
             {
-                for (var x = 0; x < ScreenWidth; x++)
+                for (Int16 x = 0; x < ScreenWidth; x++)
                 {
-                    var star = new Star(x + Xpos, y + Ypos);
+                    var star = new Star((Int16)(x + Xpos), (Int16)(y + Ypos));
                     if(star.IsStar)
                     {
                         screenbuffer[x + y * ScreenWidth] = star.Char;
@@ -83,6 +83,22 @@ namespace StarSystem
 
             statusString.CopyTo(0, screenbuffer, 0, statusString.Length);
             _sw.Stop();
+        }
+
+        public void SetScreenSize(int width, int height)
+        {
+            ScreenWidth = width;
+            ScreenHeight = height;
+
+            screenbuffer = new char[ScreenWidth * ScreenHeight];
+        }
+
+
+
+        public void Goto(Int16 x, Int16 y)
+        {
+            Xpos = x;
+            Ypos = y;
         }
     }
 }

@@ -10,16 +10,16 @@ namespace StarSystem
     {
 
         private static readonly char[] startypes = { '*', 'O', 'o', '¤' };
-        private static readonly ConsoleColor[] colors = { ConsoleColor.Gray, ConsoleColor.DarkGray, ConsoleColor.Green, ConsoleColor.Cyan, ConsoleColor.Magenta, ConsoleColor.Red };
+        private static readonly ConsoleColor[] colors = { ConsoleColor.Yellow, ConsoleColor.Gray, ConsoleColor.DarkGray, ConsoleColor.Green, ConsoleColor.Cyan, ConsoleColor.Magenta, ConsoleColor.Red };
         private NR3Generator _rnd;
 
-        public int CoordX { get; }
-        public int CoordY { get; }
+        public Int16 CoordX { get; }
+        public Int16 CoordY { get; }
         public bool IsStar { get; }
         public char Char { get; }
         public ConsoleColor Color { get; } = ConsoleColor.White;
 
-        public Star(int x, int y)
+        public Star(Int16 x, Int16 y)
         {
             _rnd = new NR3Generator((x & 0xFFFF) << 16 | (y & 0xFFFF));
 
