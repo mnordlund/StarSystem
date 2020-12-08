@@ -14,13 +14,13 @@ namespace StarSystem
         private NR3Generator _rnd;
 
         private int Hash => (CoordX & 0xFFFF) << 16 | (CoordY & 0xFFFF);
-        public Int16 CoordX { get; }
-        public Int16 CoordY { get; }
+        public int CoordX { get; }
+        public int CoordY { get; }
         public bool IsStar { get; }
         public char Char { get; }
         public ConsoleColor Color { get; } = ConsoleColor.White;
 
-        public Star(Int16 x, Int16 y, bool generateFullInfo = false)
+        public Star(int x, int y, bool generateFullInfo = false)
         {
 
             CoordX = x;

@@ -27,6 +27,8 @@ namespace StarSystem
         {
             ScreenWidth = width;
             ScreenHeight = height;
+            Xpos = 0;
+            Ypos = 0;
             Alive = true;
             _clearscreen = Enumerable.Repeat(' ', ScreenWidth * ScreenHeight).ToArray();
             _stars = new List<Star>();
@@ -62,12 +64,11 @@ namespace StarSystem
             var renderTime = _sw.ElapsedMilliseconds;
             _sw.Restart();
             _stars.Clear();
-            Console.SetCursorPosition(0, 0);
-            for (Int16 y = 0; y < ScreenHeight; y++)
+            for (var y = 0; y < ScreenHeight; y++)
             {
-                for (Int16 x = 0; x < ScreenWidth; x++)
+                for (var x = 0; x < ScreenWidth; x++)
                 {
-                    var star = new Star((Int16)(x + Xpos), (Int16)(y + Ypos));
+                    var star = new Star((x + Xpos), (y + Ypos));
                     if(star.IsStar)
                     {
                         _stars.Add(star);
