@@ -479,9 +479,9 @@ namespace StarSystem
 
         public StarNameGenerator()
         {
-            _chain = new MarkovChain<char>(3);
+            _chain = new MarkovChain<char>(4);
 
-            foreach(var name in StarNames)
+            foreach (var name in StarNames)
             {
                 _chain.Add(name);
             }
@@ -491,7 +491,7 @@ namespace StarSystem
         {
             var sb = new StringBuilder();
 
-            foreach(var c in _chain.Chain(seed))
+            foreach (var c in _chain.Chain(seed))
             {
                 sb.Append(c);
             }

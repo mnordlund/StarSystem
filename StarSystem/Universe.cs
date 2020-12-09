@@ -74,6 +74,9 @@ namespace StarSystem
             int cursorwidth = 5;
             if (XSelection < 2) cursorwidth -= 2 - XSelection;
             if (XSelection > ScreenWidth - 3) cursorwidth -= 3 - (ScreenWidth - XSelection);
+
+            Console.ForegroundColor = ConsoleColor.White;
+
             cursorhor = new string(' ', cursorwidth);
 
             _locationString = $"{Xpos} x {Ypos} ({renderTime}ms)";
