@@ -9,7 +9,7 @@ namespace StarSystem
     class Star
     {
 
-        private static readonly char[] startypes = { '*', 'O', 'o', '¤' };
+        private static readonly char[] startypes = { 'O', '¤', '*', 'o', '.' };
         private static readonly ConsoleColor[] colors = { ConsoleColor.Yellow, ConsoleColor.Gray, ConsoleColor.DarkGray, ConsoleColor.Green, ConsoleColor.Cyan, ConsoleColor.Magenta, ConsoleColor.Red };
         private NR3Generator _rnd;
 
@@ -19,6 +19,8 @@ namespace StarSystem
         public bool IsStar { get; }
         public char Char { get; }
         public ConsoleColor Color { get; } = ConsoleColor.White;
+
+        public string Name { get;  }
 
         public Star(int x, int y, bool generateFullInfo = false)
         {
@@ -32,8 +34,8 @@ namespace StarSystem
 
             if (!IsStar) return;
 
-            Char = startypes[_rnd.Next(0, 4)];
-            var colorChance = _rnd.Next(0, 50);
+            Char = startypes[_rnd.Next(0, startypes.Length)];
+            var colorChance = _rnd.Next(0, 100);
             if(colorChance < colors.Length)
             {
                 Color = colors[colorChance];
@@ -41,11 +43,15 @@ namespace StarSystem
 
             // If we should generate full info generate all information.
             if (!generateFullInfo) return;
+
+            Name = new StarNameGenerator().GenerateStarName(_rnd.Next());
         }
 
         public override string ToString()
         {
-            return $"{CoordX} x {CoordY}";
+            if (!IsStar) return "";
+            
+            return $"{Char} - {Name} ({CoordX}x{CoordY})";
         }
 
         public override bool Equals(object obj)

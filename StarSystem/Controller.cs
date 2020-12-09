@@ -16,14 +16,17 @@ namespace StarSystem
 
         public void Update()
         {
-            var key = Console.ReadKey();
+            var key = Console.ReadKey(true);
 
             switch (key.Key)
             {
+                // Quit
                 case ConsoleKey.Escape:
                 case ConsoleKey.Q:
                     Universe.Alive = false;
                     break;
+
+                // Movement
                 case ConsoleKey.UpArrow:
                 case ConsoleKey.W:
                     Universe.Ypos -= YVelocity;
@@ -46,11 +49,32 @@ namespace StarSystem
                     Console.CursorVisible = true;
                     Console.WriteLine("Goto poition:");
                     Console.Write("X coordinate: ");
-                    var x = Int16.Parse(Console.ReadLine());
+                    Int16 x;
+                    while(!Int16.TryParse(Console.ReadLine(), out x))
+                    {
+                        Console.Write($"X coordinate ({Int16.MinValue} - {Int16.MaxValue}): ");
+                    }
                     Console.Write("Y coordinate: ");
-                    var y = Int16.Parse(Console.ReadLine());
-                    Console.CursorVisible = true;
+                    Int16 y;
+                    while(!Int16.TryParse(Console.ReadLine(),  out y))
+                    {
+                        Console.Write($"Y coordinate ({Int16.MinValue} - {Int16.MaxValue}): ");
+                    }
+                    Console.CursorVisible = false;
                     Universe.Goto(x, y);
+                    break;
+
+                case ConsoleKey.I:
+                    Universe.YSelection--;
+                    break;
+                case ConsoleKey.K:
+                    Universe.YSelection++;
+                    break;
+                case ConsoleKey.J:
+                    Universe.XSelection--;
+                    break;
+                case ConsoleKey.L:
+                    Universe.XSelection++;
                     break;
             }
 
