@@ -13,7 +13,7 @@ namespace StarSystem
         private static readonly ConsoleColor[] colors = { ConsoleColor.Yellow, ConsoleColor.Gray, ConsoleColor.DarkGray, ConsoleColor.Green, ConsoleColor.Cyan, ConsoleColor.Magenta, ConsoleColor.Red };
         private NR3Generator _rnd;
 
-        private int Hash => (CoordX & 0xFFFF) << 16 | (CoordY & 0xFFFF);
+        private int Seed => (CoordX & 0xFFFF) << 16 | (CoordY & 0xFFFF);
         public int CoordX { get; }
         public int CoordY { get; }
         public bool IsStar { get; }
@@ -28,7 +28,7 @@ namespace StarSystem
             CoordX = x;
             CoordY = y;
 
-            _rnd = new NR3Generator(Hash);
+            _rnd = new NR3Generator(Seed);
 
             IsStar = _rnd.Next(1, 150) == 1;
 
@@ -44,7 +44,7 @@ namespace StarSystem
             // If we should generate full info generate all information.
             if (!generateFullInfo) return;
 
-            Name = new StarNameGenerator().GenerateStarName(_rnd.Next());
+            Name = new StarNameGenerator().GenerateStarName(Seed);
         }
 
         public override string ToString()
@@ -59,7 +59,7 @@ namespace StarSystem
             if(obj is Star)
             {
                 var cmp = (Star)obj;
-                return cmp.Hash == Hash;
+                return cmp.Seed == Seed;
             }
 
             return false;
@@ -67,7 +67,7 @@ namespace StarSystem
 
         public override int GetHashCode()
         {
-            return Hash;
+            return Seed;
         }
 
         public int Distance(Star star)

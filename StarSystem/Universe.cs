@@ -17,14 +17,33 @@ namespace StarSystem
         public int XSelection { get => _xselection; 
             set 
             {
-                if (value < 0 || value >= ScreenWidth) return;
+                if (value < 0)
+                {
+                    Xpos+=(short)value;
+                    return;
+                }
+                else if (value >= ScreenWidth)
+                {
+                    Xpos +=(short) (value - (ScreenWidth - 1));
+                    return;
+                }
+                
                 _xselection = value;
             } }
         private int _yselection;
         public int YSelection { get=> _yselection;
             set
             {
-                if (value < 0 || value >= ScreenHeight) return;
+                if (value < 0) 
+                {
+                    Ypos += (short)value;
+                    return;
+                } 
+                else if (value >= ScreenHeight) 
+                {
+                    Ypos += (short)(value - (ScreenHeight - 1));
+                    return;
+                }
                 _yselection = value;
             } }
 
@@ -99,7 +118,7 @@ namespace StarSystem
             Console.BackgroundColor = ConsoleColor.DarkBlue;
             Console.SetCursorPosition(Math.Max(XSelection - 2, 0), YSelection);
             Console.Write(cursorhor);
-            for(int i = Math.Max(YSelection - 2, 0); i <= Math.Min(YSelection + 2, ScreenHeight); i++)
+            for(int i = Math.Max(YSelection - 2, 0); i <= Math.Min(YSelection + 2, ScreenHeight-1); i++)
             {
                 Console.SetCursorPosition(XSelection, i);
                 Console.Write(' ');
@@ -116,6 +135,7 @@ namespace StarSystem
                 Console.Write(star.Char);
 
             }
+            Console.ForegroundColor = ConsoleColor.White;
 
             Console.SetCursorPosition(0, 0);
             Console.Write(_locationString);
